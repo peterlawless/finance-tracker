@@ -27,4 +27,42 @@ class User < ApplicationRecord
     user_stocks.where(stock_id: stock.id).exists?
   end
 
+  def not_friends_with?(friend_id)
+    friendships.where(friend_id: friend_id).count < 1
+  end
+
+  def except_current_user(users)
+    # iterates through collection of users and removes its own instance
+    users.reject { |user| user.id == self.id }
+  end
+
+  def self.search(param)
+    return User.none if param.blank?
+
+    # data cleaning
+    param.strip!
+    param.downcase!
+
+    (first_name_matches(param) + last_name_matches(param) + email_matches(param)).uniq
+
+  end
+
+  def self.first_name_matches(param)
+    matches('first_name', param)
+  end
+
+  def self.last_name_matches(param)
+    matches('last_name', param)
+  end
+
+  def self.email_matches(param)
+    matches('email', param)
+  end
+
+  def self.matches(field_name, param)
+    # In SQL, "%" represents a "wild card" so that results do not have to be an exact match
+    where("lower(#{field_name}) like ?", "%#{param}%")
+  end
+
 end
+
