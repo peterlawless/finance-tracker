@@ -4,6 +4,9 @@
       <th>Name</th>
       <th>Symbol</th>
       <th>Current Price</th>
+      <!-- this condition is necessary for when the list partial
+           is rendered in the user show view, in which case @user
+           is not the current_user -->
       <% if @user.id == current_user.id %>
         <th>Actions</th>
       <% end %>
@@ -15,6 +18,9 @@
         <td><%= user_stock.name %></td>
         <td><%= user_stock.ticker %></td>
         <td><%= user_stock.price %></td>
+        <!-- this condition is necessary for when the list partial
+             is rendered in the user show view, in which case @user
+             is not the current_user -->
         <% if @user.id == current_user.id %>
           <td>
             <%= link_to "Delete", user_stock_path(user_stock), :method => :delete,
